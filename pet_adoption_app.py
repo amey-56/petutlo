@@ -119,16 +119,21 @@ def login():
     username = st.sidebar.text_input("🔑 Username", key="login_username")
     password = st.sidebar.text_input("🔒 Password", type="password", key="login_password")
 
+    if "login_attempt" not in st.session_state:
+        st.session_state["login_attempt"] = False
+
     def attempt_login():
         user_ref = db.reference(f"users/{username}").get()
         if user_ref and verify_password(password, user_ref["password"]):
             st.session_state["logged_in_user"] = {"username": username, "full_name": user_ref["full_name"]}
-            st.sidebar.success(f"🎉 Welcome, {user_ref['full_name']}!")
-            st.rerun()
+            st.session_state["login_attempt"] = True
         else:
             st.sidebar.error("❌ Invalid credentials!")
 
-    st.sidebar.button("🚪 Log In", on_click=attempt_login)
+    if st.sidebar.button("🚪 Log In"):
+        attempt_login()
+        if st.session_state["login_attempt"]:
+            st.rerun()
 
 def logout():
     st.session_state["logged_in_user"] = None
