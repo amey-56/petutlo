@@ -122,13 +122,22 @@ def login():
     password = st.sidebar.text_input("🔒 Password", type="password")
 
     if st.sidebar.button("🚪 Log In"):
-        user_ref = db.reference(f"users/{username}").get()
-        if user_ref and verify_password(password, user_ref["password"]):
-            st.session_state["logged_in_user"] = {"username": username, "full_name": user_ref["full_name"]}
-            st.sidebar.success(f"🎉 Welcome, {user_ref['full_name']}!")
-            st.experimental_rerun()
-        else:
-            st.sidebar.error("❌ Invalid credentials!")
+        # Validate user credentials
+        try:
+            user_ref = db.reference(f"users/{username}").get()
+            if user_ref and verify_password(password, user_ref["password"]):
+                # Update session state with logged-in user
+                st.session_state["logged_in_user"] = {
+                    "username": username,
+                    "full_name": user_ref["full_name"]
+                }
+                st.sidebar.success(f"🎉 Welcome, {user_ref['full_name']}!")
+                # Trigger rerun only after successful login
+                st.experimental_rerun()
+            else:
+                st.sidebar.error("❌ Invalid credentials!")
+        except Exception as e:
+            st.sidebar.error(f"Error logging in: {e}")
 
 # Pet Management
 def add_pet():
@@ -230,4 +239,6 @@ else:
         view_pets(show_my_pets=True)
     elif page == "🚪 Logout":
         st.session_state["logged_in_user"] = None
+        st.sidebar.success("Logged out successfully!")
         st.experimental_rerun()
+
