@@ -7,6 +7,44 @@ import bcrypt
 
 # Streamlit page configuration
 st.set_page_config(page_title="Pet Adoption Platform 🐾", layout="wide")
+# Custom CSS for Sidebar Styling
+st.markdown("""
+    <style>
+        /* Sidebar styling */
+        [data-testid="stSidebar"] {
+            background-color: #2E2E2E; /* Dark grey background */
+            padding: 20px;
+            font-size: 20px; /* Make text bigger */
+            width: 350px; /* Make sidebar wider */
+        }
+
+        /* Sidebar Title Styling */
+        [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2 {
+            color: #FF6F61; /* Accent color for headings */
+            font-size: 26px; /* Larger font size */
+            font-weight: bold;
+        }
+
+        /* Sidebar Text Styling */
+        [data-testid="stSidebar"] .stRadio, [data-testid="stSidebar"] .stTextInput {
+            font-size: 18px; /* Adjust size for inputs and radios */
+            color: #FFFFFF; /* White text */
+        }
+
+        /* Sidebar links and text styling */
+        .sidebar-content {
+            color: #FFFFFF; /* White text for sidebar */
+            font-size: 20px;
+            margin-top: 10px;
+        }
+
+        /* Overall Text */
+        p, label {
+            font-size: 18px;
+            color: #FFFFFF;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 # Initialize Firebase using Streamlit secrets
 if not firebase_admin._apps:
