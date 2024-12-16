@@ -231,7 +231,9 @@ else:
 
     if page == "🏠 Home":
         st.subheader("🐕 Welcome to the Pet Adoption Platform!")
-        
+        video_url = st.text_input("📹 Add YouTube Video URL (optional)", placeholder="Paste YouTube video link here")
+        if video_url:
+            st.video(video_url)
         st.markdown("### Designed by Amey Negandhi")
         view_pets()
     elif page == "➕ Add a Pet":
