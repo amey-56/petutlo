@@ -102,7 +102,7 @@ def mark_as_adopted(pet_id):
 def register():
     st.sidebar.subheader("🚀 Register")
     with st.sidebar.form("register_form"):
-        full_name = st.text_input("✨ Full Name", key="reg_full_name")
+        full_name = st.text_input("✨ Full Name", key="reg_fullname")
         username = st.text_input("🔑 Username", key="reg_username")
         password = st.text_input("🔒 Password", type="password", key="reg_password")
         if st.form_submit_button("🎉 Register"):
@@ -124,7 +124,7 @@ def login():
         if user_ref and verify_password(password, user_ref["password"]):
             st.session_state["logged_in_user"] = {"username": username, "full_name": user_ref["full_name"]}
             st.sidebar.success(f"🎉 Welcome, {user_ref['full_name']}!")
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.sidebar.error("❌ Invalid credentials!")
 
@@ -132,7 +132,7 @@ def login():
 
 def logout():
     st.session_state["logged_in_user"] = None
-    st.experimental_rerun()
+    st.rerun()
 
 # Pet Management
 def add_pet():
