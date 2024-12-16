@@ -232,7 +232,7 @@ else:
     if page == "🏠 Home":
         st.subheader("🐕 Welcome to the Pet Adoption Platform!")
         st.subheader("Watch the impact")
-            st.video(https://www.youtube.com/watch?v=s0MjNXP8SSU)
+        st.video(https://www.youtube.com/watch?v=s0MjNXP8SSU)
         st.markdown("### Designed by Amey Negandhi")
         view_pets()
     elif page == "➕ Add a Pet":
