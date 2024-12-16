@@ -185,11 +185,11 @@ def view_pets(show_my_pets=False):
         st.write(f"📍 Location: {pet.get('location')}")
         embed_map(pet.get("location"))
         if pet.get("image_paths"):
-    for img_path in pet["image_paths"]:
-        if os.path.exists(img_path):  # Check if the file exists
-            st.image(img_path, use_container_width=True)  # Display the image
-        else:
-            st.warning(f"⚠️ Missing image: {img_path}")  # Log a warning
+           for img_path in pet["image_paths"]:
+                if os.path.exists(img_path):  # Check if the file exists
+                   st.image(img_path, use_container_width=True)  # Display the image
+               else:
+                   st.warning(f"⚠️ Missing image: {img_path}")  # Log a warning
 
         view_comments(pet_id)
         if show_my_pets and not pet.get("adopted"):
