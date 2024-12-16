@@ -8,7 +8,7 @@ import bcrypt
 # Streamlit page configuration
 st.set_page_config(page_title="Pet Adoption Platform 🐾", layout="wide")
 
-# Initialize Firebase using secrets
+# Initialize Firebase using Streamlit secrets
 if not firebase_admin._apps:
     try:
         firebase_secrets = st.secrets["firebase"]
@@ -16,7 +16,7 @@ if not firebase_admin._apps:
             "type": firebase_secrets["type"],
             "project_id": firebase_secrets["project_id"],
             "private_key_id": firebase_secrets["private_key_id"],
-            "private_key": firebase_secrets["private_key"].replace("\\n", "\n"),  # Handle newlines in private key
+            "private_key": firebase_secrets["private_key"].replace("\\n", "\n"),
             "client_email": firebase_secrets["client_email"],
             "client_id": firebase_secrets["client_id"],
             "auth_uri": firebase_secrets["auth_uri"],
@@ -120,6 +120,7 @@ def login():
     st.sidebar.subheader("🔓 Login")
     username = st.sidebar.text_input("🔑 Username")
     password = st.sidebar.text_input("🔒 Password", type="password")
+
     if st.sidebar.button("🚪 Log In"):
         user_ref = db.reference(f"users/{username}").get()
         if user_ref and verify_password(password, user_ref["password"]):
