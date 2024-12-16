@@ -196,7 +196,7 @@ def view_pets(show_my_pets=False):
             if st.button(f"Mark '{pet.get('name')}' as Adopted", key=f"adopt_{pet_id}"):
                 mark_as_adopted(pet_id)
         comment_text = st.text_input(f"Add a comment for {pet.get('name')}", key=f"comment_{pet_id}")
-        if st.button(f"Comment on {pet.get('name')}", key=f"button_{pet_id}"):
+        if st.button(f"Comment on {pet.get('name')}", key=f"button_{pet_id}. Tap twice to save"):
             add_comment(pet_id, comment_text)
 
 # Main Application
