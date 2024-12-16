@@ -8,10 +8,22 @@ import bcrypt
 # Streamlit page configuration
 st.set_page_config(page_title="Pet Adoption Platform 🐾", layout="wide")
 
-# Initialize Firebase
+# Initialize Firebase using secrets
 if not firebase_admin._apps:
     try:
-        cred = credentials.Certificate("/Users/ameynegandhi/Downloads/pet-pro-d4c5f-firebase-adminsdk-56z4m-07cd971e5f.json")
+        firebase_secrets = st.secrets["firebase"]
+        cred = credentials.Certificate({
+            "type": firebase_secrets["type"],
+            "project_id": firebase_secrets["project_id"],
+            "private_key_id": firebase_secrets["private_key_id"],
+            "private_key": firebase_secrets["private_key"].replace("\\n", "\n"),  # Handle newlines in private key
+            "client_email": firebase_secrets["client_email"],
+            "client_id": firebase_secrets["client_id"],
+            "auth_uri": firebase_secrets["auth_uri"],
+            "token_uri": firebase_secrets["token_uri"],
+            "auth_provider_x509_cert_url": firebase_secrets["auth_provider_x509_cert_url"],
+            "client_x509_cert_url": firebase_secrets["client_x509_cert_url"],
+        })
         firebase_admin.initialize_app(cred, {
             "databaseURL": "https://pet-pro-d4c5f-default-rtdb.firebaseio.com/"
         })
