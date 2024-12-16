@@ -94,7 +94,6 @@ def mark_as_adopted(pet_id):
     try:
         db.reference(f"pets/{pet_id}").update({"adopted": True})
         st.success("🎉 Pet marked as adopted!")
-        st.experimental_rerun()
     except Exception as e:
         st.error(f"Failed to mark pet as adopted: {e}")
 
@@ -132,12 +131,15 @@ def login():
                     "full_name": user_ref["full_name"]
                 }
                 st.sidebar.success(f"🎉 Welcome, {user_ref['full_name']}!")
-                # Trigger rerun only after successful login
-                st.experimental_rerun()
             else:
                 st.sidebar.error("❌ Invalid credentials!")
         except Exception as e:
             st.sidebar.error(f"Error logging in: {e}")
+
+def logout():
+    st.session_state["logged_in_user"] = None
+    st.experimental_set_query_params()  # Redirect to the same app to refresh the state
+    st.sidebar.success("Logged out successfully!")
 
 # Pet Management
 def add_pet():
@@ -238,7 +240,4 @@ else:
     elif page == "🐾 My Pets":
         view_pets(show_my_pets=True)
     elif page == "🚪 Logout":
-        st.session_state["logged_in_user"] = None
-        st.sidebar.success("Logged out successfully!")
-        st.experimental_rerun()
-
+        logout()
