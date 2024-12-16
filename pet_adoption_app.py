@@ -188,7 +188,7 @@ def view_pets(show_my_pets=False):
            for img_path in pet["image_paths"]:
                 if os.path.exists(img_path):  # Check if the file exists
                    st.image(img_path, use_container_width=True)  # Display the image
-               else:
+                else:
                    st.warning(f"⚠️ Missing image: {img_path}")  # Log a warning
 
         view_comments(pet_id)
@@ -231,9 +231,7 @@ else:
 
     if page == "🏠 Home":
         st.subheader("🐕 Welcome to the Pet Adoption Platform!")
-        video_url = st.text_input("📹 YouTube Video URL", placeholder="Enter a YouTube video link here")
-        if video_url:
-            st.video(video_url)
+        
         st.markdown("### Designed by Amey Negandhi")
         view_pets()
     elif page == "➕ Add a Pet":
