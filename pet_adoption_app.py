@@ -76,6 +76,7 @@ def add_comment(pet_id, comment_text):
         comments_ref = db.reference(f"comments/{pet_id}")
         commenter = st.session_state["logged_in_user"]["username"]
         comments_ref.push({"commenter": commenter, "text": comment_text})
+        st.success("Comment added successfully!")
     else:
         st.error("You must be logged in to add a comment!")
 
@@ -101,12 +102,10 @@ def mark_as_adopted(pet_id):
 def register():
     st.sidebar.subheader("🚀 Register")
     with st.sidebar.form("register_form"):
-        full_name = st.text_input("✨ Full Name")
-        username = st.text_input("🔑 Username")
-        password = st.text_input("🔒 Password", type="password")
-        submit = st.form_submit_button("🎉 Register")
-
-        if submit:
+        full_name = st.text_input("✨ Full Name", key="reg_full_name")
+        username = st.text_input("🔑 Username", key="reg_username")
+        password = st.text_input("🔒 Password", type="password", key="reg_password")
+        if st.form_submit_button("🎉 Register"):
             users_ref = db.reference("users")
             if users_ref.child(username).get():
                 st.sidebar.error("❌ Username already exists!")
@@ -117,29 +116,23 @@ def register():
 
 def login():
     st.sidebar.subheader("🔓 Login")
-    username = st.sidebar.text_input("🔑 Username")
-    password = st.sidebar.text_input("🔒 Password", type="password")
+    username = st.sidebar.text_input("🔑 Username", key="login_username")
+    password = st.sidebar.text_input("🔒 Password", type="password", key="login_password")
 
-    if st.sidebar.button("🚪 Log In"):
-        # Validate user credentials
-        try:
-            user_ref = db.reference(f"users/{username}").get()
-            if user_ref and verify_password(password, user_ref["password"]):
-                # Update session state with logged-in user
-                st.session_state["logged_in_user"] = {
-                    "username": username,
-                    "full_name": user_ref["full_name"]
-                }
-                st.sidebar.success(f"🎉 Welcome, {user_ref['full_name']}!")
-            else:
-                st.sidebar.error("❌ Invalid credentials!")
-        except Exception as e:
-            st.sidebar.error(f"Error logging in: {e}")
+    def attempt_login():
+        user_ref = db.reference(f"users/{username}").get()
+        if user_ref and verify_password(password, user_ref["password"]):
+            st.session_state["logged_in_user"] = {"username": username, "full_name": user_ref["full_name"]}
+            st.sidebar.success(f"🎉 Welcome, {user_ref['full_name']}!")
+            st.experimental_rerun()
+        else:
+            st.sidebar.error("❌ Invalid credentials!")
+
+    st.sidebar.button("🚪 Log In", on_click=attempt_login)
 
 def logout():
     st.session_state["logged_in_user"] = None
-    st.experimental_set_query_params()  # Redirect to the same app to refresh the state
-    st.sidebar.success("Logged out successfully!")
+    st.experimental_rerun()
 
 # Pet Management
 def add_pet():
@@ -147,22 +140,14 @@ def add_pet():
     with st.form("add_pet_form", clear_on_submit=True):
         name = st.text_input("🐶 Pet's Name")
         pet_type = st.selectbox("🦄 Type of Pet", ["Dog", "Cat", "Bird", "Other"])
-        age = st.number_input("🎂 Age (in years)", min_value=0.0, step=0.1)
+        age = st.number_input("🎂 Age (in years)", min_value=0.0)
         description = st.text_area("📜 Description")
-        location = st.text_input("📍 Location (City/Address)")
+        location = st.text_input("📍 Location")
         vaccinated = st.radio("💉 Vaccinated?", ["Yes", "No"])
-        images = st.file_uploader("📸 Upload up to 3 Pictures", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
-        submit = st.form_submit_button("➕ Add Pet")
-
-        if submit:
-            image_paths = []
-            for i, image in enumerate(images[:3]):  # Limit to 3 images
-                filename = f"{name.lower().replace(' ', '_')}_img{i+1}.jpg"
-                image_path = save_image(image, filename)
-                if image_path:
-                    image_paths.append(image_path)
-            
-            pet_data = {
+        images = st.file_uploader("📸 Upload up to 3 Images", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
+        if st.form_submit_button("➕ Add Pet"):
+            image_paths = [save_image(img, f"{name}_{i}.jpg") for i, img in enumerate(images or [])]
+            db.reference("pets").push({
                 "name": name,
                 "pet_type": pet_type,
                 "age": age,
@@ -172,72 +157,38 @@ def add_pet():
                 "image_paths": image_paths,
                 "adopted": False,
                 "owner": st.session_state["logged_in_user"]["username"]
-            }
-            try:
-                db.reference("pets").push(pet_data)
-                st.success(f"🎉 Pet '{name}' added successfully!")
-            except Exception as e:
-                st.error(f"Failed to add pet: {e}")
+            })
+            st.success(f"🎉 Pet '{name}' added successfully!")
 
-def view_pets(show_my_pets=False):
-    """View all pets or only the logged-in user's pets."""
-    st.subheader("🐕 Available Pets" if not show_my_pets else "🐾 My Pets")
+def view_pets():
+    st.subheader("🐕 Available Pets")
     pets_ref = db.reference("pets").get()
     if not pets_ref:
-        st.write("❌ No pets available!")
+        st.write("No pets available!")
         return
-
     for pet_id, pet in pets_ref.items():
-        if show_my_pets and pet.get("owner") != st.session_state["logged_in_user"]["username"]:
-            continue
-        if not show_my_pets and pet.get("adopted"):
-            continue
-        
-        st.write(f"**{pet.get('name')} ({pet.get('pet_type')}) - {pet.get('age')} years**")
-        st.write(f"📜 {pet.get('description')}")
-        st.write(f"📍 Location: {pet.get('location')}")
-        embed_map(pet.get("location"))
-        if pet.get("image_paths"):
-            for img_path in pet["image_paths"]:
-                st.image(img_path, caption=pet.get("name"), use_column_width=True)
-        view_comments(pet_id)
-        if pet.get("owner") == st.session_state["logged_in_user"]["username"] and not pet.get("adopted"):
-            if st.button(f"Mark '{pet.get('name')}' as Adopted", key=f"adopt_{pet_id}"):
-                mark_as_adopted(pet_id)
-        comment_text = st.text_input(f"Add a comment for {pet.get('name')}", key=f"comment_{pet_id}")
-        if st.button(f"Comment on {pet.get('name')}", key=f"button_{pet_id}"):
-            add_comment(pet_id, comment_text)
+        if not pet.get("adopted"):
+            st.write(f"**{pet['name']} ({pet['pet_type']}) - {pet['age']} years**")
+            st.write(pet["description"])
+            st.write(f"📍 Location: {pet['location']}")
+            embed_map(pet["location"])
+            for img_path in pet.get("image_paths", []):
+                st.image(img_path, use_container_width=True)
+            view_comments(pet_id)
 
 # Main Application
-def landing_page():
-    st.markdown("""
-    <style>
-        .landing-container { text-align: center; margin-top: 50px; }
-        .title { font-size: 60px; color: #FF6F61; font-weight: bold; }
-        .subtitle { font-size: 22px; color: #666; }
-    </style>
-    <div class="landing-container">
-        <h1 class="title">🐾 Welcome to PetAdopt 🐾</h1>
-        <p class="subtitle">Find your new furry friend today!</p>
-    </div>
-    """, unsafe_allow_html=True)
-
 st.sidebar.title("🚀 Navigation")
-
 if st.session_state["logged_in_user"] is None:
-    landing_page()
+    st.write("🐾 Welcome to PetAdopt! Find your furry friend today!")
     login()
     register()
 else:
     user = st.session_state["logged_in_user"]
-    st.sidebar.write(f"👋 Logged in as: **{user['full_name']}**")
-    page = st.sidebar.radio("Go to", ["🏠 Home", "➕ Add a Pet", "🐾 My Pets", "🚪 Logout"])
-
+    st.sidebar.write(f"👋 Welcome, **{user['full_name']}**")
+    page = st.sidebar.radio("Go to", ["🏠 Home", "➕ Add Pet", "🚪 Logout"])
     if page == "🏠 Home":
         view_pets()
-    elif page == "➕ Add a Pet":
+    elif page == "➕ Add Pet":
         add_pet()
-    elif page == "🐾 My Pets":
-        view_pets(show_my_pets=True)
     elif page == "🚪 Logout":
         logout()
