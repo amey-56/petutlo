@@ -8,6 +8,7 @@ import bcrypt
 # Streamlit page configuration
 st.set_page_config(page_title="Pet Adoption Platform 🐾", layout="wide")
 # Custom CSS for Sidebar Styling
+# Custom CSS for Sidebar Styling
 st.markdown("""
     <style>
         /* Sidebar styling */
@@ -25,26 +26,32 @@ st.markdown("""
             font-weight: bold;
         }
 
-        /* Sidebar Text Styling */
-        [data-testid="stSidebar"] .stRadio, [data-testid="stSidebar"] .stTextInput {
-            font-size: 18px; /* Adjust size for inputs and radios */
-            color: #FFFFFF; /* White text */
+        /* Styling for Sidebar Radio Buttons */
+        [data-testid="stSidebar"] .stRadio label {
+            font-size: 18px; /* Make radio button text bigger */
+            padding: 10px 20px; /* Add padding for spacing */
+            border-radius: 10px; /* Rounded edges for buttons */
+            background-color: #4B4B4B; /* Darker background for buttons */
+            color: #FFFFFF; /* White text color */
+            margin: 5px 0; /* Add space between buttons */
+            display: block; /* Make the buttons full-width */
+            transition: background-color 0.3s;
         }
 
-        /* Sidebar links and text styling */
-        .sidebar-content {
-            color: #FFFFFF; /* White text for sidebar */
-            font-size: 20px;
-            margin-top: 10px;
+        [data-testid="stSidebar"] .stRadio label:hover {
+            background-color: #FF6F61; /* Change background on hover */
+            color: #000000; /* Black text on hover */
         }
 
-        /* Overall Text */
-        p, label {
-            font-size: 18px;
-            color: #FFFFFF;
+        /* Styling for Sidebar Selected Option */
+        [data-testid="stSidebar"] .stRadio input:checked + label {
+            background-color: #FF6F61; /* Highlight selected button */
+            color: #000000; /* Black text for selected option */
+            font-weight: bold;
         }
     </style>
 """, unsafe_allow_html=True)
+
 
 # Initialize Firebase using Streamlit secrets
 if not firebase_admin._apps:
