@@ -165,35 +165,76 @@ def add_pet():
             })
             st.success(f"🎉 Pet '{name}' added successfully!")
 
-def view_pets():
-    st.subheader("🐕 Available Pets")
+def view_pets(show_my_pets=False):
+    """View all pets or only the logged-in user's pets."""
+    title = "🐕 Available Pets" if not show_my_pets else "🐾 My Pets"
+    st.subheader(title)
     pets_ref = db.reference("pets").get()
     if not pets_ref:
-        st.write("No pets available!")
+        st.write("❌ No pets available!")
         return
+
     for pet_id, pet in pets_ref.items():
-        if not pet.get("adopted"):
-            st.write(f"**{pet['name']} ({pet['pet_type']}) - {pet['age']} years**")
-            st.write(pet["description"])
-            st.write(f"📍 Location: {pet['location']}")
-            embed_map(pet["location"])
-            for img_path in pet.get("image_paths", []):
+        if show_my_pets and pet.get("owner") != st.session_state["logged_in_user"]["username"]:
+            continue
+        if not show_my_pets and pet.get("adopted"):
+            continue
+
+        st.write(f"**{pet.get('name')} ({pet.get('pet_type')}) - {pet.get('age')} years**")
+        st.write(f"📜 {pet.get('description')}")
+        st.write(f"📍 Location: {pet.get('location')}")
+        embed_map(pet.get("location"))
+        if pet.get("image_paths"):
+            for img_path in pet["image_paths"]:
                 st.image(img_path, use_container_width=True)
-            view_comments(pet_id)
+        view_comments(pet_id)
+        if show_my_pets and not pet.get("adopted"):
+            if st.button(f"Mark '{pet.get('name')}' as Adopted", key=f"adopt_{pet_id}"):
+                mark_as_adopted(pet_id)
+        comment_text = st.text_input(f"Add a comment for {pet.get('name')}", key=f"comment_{pet_id}")
+        if st.button(f"Comment on {pet.get('name')}", key=f"button_{pet_id}"):
+            add_comment(pet_id, comment_text)
 
 # Main Application
+def landing_page():
+    st.markdown("""
+    <style>
+        .landing-container { text-align: center; margin-top: 50px; }
+        .title { font-size: 80px; color: #FF6F61; font-weight: bold; }
+        .subtitle { font-size: 26px; color: #666; }
+    </style>
+    <div class="landing-container">
+        <h1 class="title">🐾 Welcome to PetAdopt 🐾</h1>
+        <p class="subtitle">Find your new furry friend today!</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.sidebar.markdown("""
+    <style>
+        .sidebar-content { font-size: 18px; }
+    </style>
+""", unsafe_allow_html=True)
+
 st.sidebar.title("🚀 Navigation")
 if st.session_state["logged_in_user"] is None:
-    st.write("🐾 Welcome to PetAdopt! Find your furry friend today!")
+    landing_page()
     login()
     register()
 else:
     user = st.session_state["logged_in_user"]
     st.sidebar.write(f"👋 Welcome, **{user['full_name']}**")
-    page = st.sidebar.radio("Go to", ["🏠 Home", "➕ Add Pet", "🚪 Logout"])
+    page = st.sidebar.radio("Go to", ["🏠 Home", "➕ Add a Pet", "🐾 My Pets", "🚪 Logout"])
+
     if page == "🏠 Home":
+        st.subheader("🐕 Welcome to the Pet Adoption Platform!")
+        video_url = st.text_input("📹 YouTube Video URL", placeholder="Enter a YouTube video link here")
+        if video_url:
+            st.video(video_url)
+        st.markdown("### Designed by Amey Negandhi")
         view_pets()
-    elif page == "➕ Add Pet":
+    elif page == "➕ Add a Pet":
         add_pet()
+    elif page == "🐾 My Pets":
+        view_pets(show_my_pets=True)
     elif page == "🚪 Logout":
         logout()
