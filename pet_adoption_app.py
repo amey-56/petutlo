@@ -6,7 +6,7 @@ from PIL import Image
 import bcrypt
 
 # Streamlit page configuration
-st.set_page_config(page_title="Pet Adoption Platform 🐾", layout="wide",theme={"base": "light"})
+st.set_page_config(page_title="Pet Adoption Platform 🐾")
 # Custom CSS for Sidebar Styling
 # Custom CSS for Sidebar Styling
 st.markdown("""
