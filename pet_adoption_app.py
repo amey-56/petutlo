@@ -13,7 +13,7 @@ st.markdown("""
     <style>
         /* Sidebar styling */
         [data-testid="stSidebar"] {
-            background-color: #000435; /* Dark grey background */
+            background-color: #000435; 
             padding: 20px;
             font-size: 20px; /* Make text bigger */
             width: 350px; /* Make sidebar wider */
@@ -31,7 +31,7 @@ st.markdown("""
             font-size: 18px; /* Make radio button text bigger */
             padding: 10px 20px; /* Add padding for spacing */
             border-radius: 10px; /* Rounded edges for buttons */
-            background-color: #4B4B4B; /* Darker background for buttons */
+            background-color: #D3D3D3; /* Darker background for buttons */
             color: #FFFFFF; /* White text color */
             margin: 5px 0; /* Add space between buttons */
             display: block; /* Make the buttons full-width */
