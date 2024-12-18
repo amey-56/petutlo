@@ -13,7 +13,7 @@ st.markdown("""
     <style>
         /* Sidebar styling */
         [data-testid="stSidebar"] {
-            background-color: #000080; /* Dark grey background */
+            background-color: #000435; /* Dark grey background */
             padding: 20px;
             font-size: 20px; /* Make text bigger */
             width: 350px; /* Make sidebar wider */
