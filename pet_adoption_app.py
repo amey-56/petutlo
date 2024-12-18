@@ -13,7 +13,7 @@ st.markdown("""
     <style>
         /* Sidebar styling */
         [data-testid="stSidebar"] {
-            background-color: #000435; 
+            background-color: #2E2E2E; /* Dark grey background */
             padding: 20px;
             font-size: 20px; /* Make text bigger */
             width: 350px; /* Make sidebar wider */
@@ -26,12 +26,41 @@ st.markdown("""
             font-weight: bold;
         }
 
+        /* Styling for Sidebar Input Fields */
+        [data-testid="stSidebar"] input {
+            color: #FFFFFF !important; /* White text for input fields */
+            background-color: #4B4B4B; /* Darker background for input fields */
+            border: 1px solid #FF6F61; /* Accent border color */
+            border-radius: 5px; /* Rounded corners */
+            padding: 8px; /* Add padding inside input */
+        }
+
+        [data-testid="stSidebar"] input::placeholder {
+            color: #CCCCCC; /* Light gray for placeholder text */
+        }
+
+        /* Styling for Sidebar Buttons */
+        [data-testid="stSidebar"] button {
+            background-color: #FF6F61; /* Accent color for buttons */
+            color: #FFFFFF; /* White text */
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            font-weight: bold;
+            margin-top: 10px; /* Add space above buttons */
+        }
+
+        [data-testid="stSidebar"] button:hover {
+            background-color: #FFFFFF; /* White background on hover */
+            color: #FF6F61; /* Accent color for text on hover */
+        }
+
         /* Styling for Sidebar Radio Buttons */
         [data-testid="stSidebar"] .stRadio label {
-            font-size: 12px; /* Make radio button text bigger */
-            padding: 15px 20px; /* Add padding for spacing */
+            font-size: 18px; /* Make radio button text bigger */
+            padding: 10px 20px; /* Add padding for spacing */
             border-radius: 10px; /* Rounded edges for buttons */
-            background-color: #A9A9A9; /* Darker background for buttons */
+            background-color: #4B4B4B; /* Darker background for buttons */
             color: #FFFFFF; /* White text color */
             margin: 5px 0; /* Add space between buttons */
             display: block; /* Make the buttons full-width */
