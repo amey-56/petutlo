@@ -31,7 +31,7 @@ st.markdown("""
             font-size: 12px; /* Make radio button text bigger */
             padding: 15px 20px; /* Add padding for spacing */
             border-radius: 10px; /* Rounded edges for buttons */
-            background-color: #000000; /* Darker background for buttons */
+            background-color: #A9A9A9; /* Darker background for buttons */
             color: #FFFFFF; /* White text color */
             margin: 5px 0; /* Add space between buttons */
             display: block; /* Make the buttons full-width */
