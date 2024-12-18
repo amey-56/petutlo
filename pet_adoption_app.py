@@ -6,7 +6,7 @@ from PIL import Image
 import bcrypt
 
 # Streamlit page configuration
-st.set_page_config(page_title="Pet Adoption Platform 🐾", layout="wide")
+st.set_page_config(page_title="Pet Adoption Platform 🐾", layout="wide", theme={"base": "dark"})
 # Custom CSS for Sidebar Styling
 # Custom CSS for Sidebar Styling
 st.markdown("""
@@ -24,35 +24,6 @@ st.markdown("""
             color: #FF6F61; /* Accent color for headings */
             font-size: 26px; /* Larger font size */
             font-weight: bold;
-        }
-
-        /* Styling for Sidebar Input Fields */
-        [data-testid="stSidebar"] input {
-            color: #FFFFFF !important; /* White text for input fields */
-            background-color: #4B4B4B; /* Darker background for input fields */
-            border: 1px solid #FF6F61; /* Accent border color */
-            border-radius: 5px; /* Rounded corners */
-            padding: 8px; /* Add padding inside input */
-        }
-
-        [data-testid="stSidebar"] input::placeholder {
-            color: #CCCCCC; /* Light gray for placeholder text */
-        }
-
-        /* Styling for Sidebar Buttons */
-        [data-testid="stSidebar"] button {
-            background-color: #FF6F61; /* Accent color for buttons */
-            color: #FFFFFF; /* White text */
-            border: none;
-            border-radius: 5px;
-            padding: 10px;
-            font-weight: bold;
-            margin-top: 10px; /* Add space above buttons */
-        }
-
-        [data-testid="stSidebar"] button:hover {
-            background-color: #FFFFFF; /* White background on hover */
-            color: #FF6F61; /* Accent color for text on hover */
         }
 
         /* Styling for Sidebar Radio Buttons */
