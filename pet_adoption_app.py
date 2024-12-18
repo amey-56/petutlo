@@ -250,7 +250,7 @@ def landing_page():
     <style>
         .landing-container { text-align: center; margin-top: 50px; }
         .title { font-size: 80px; color: #FF6F61; font-weight: bold; }
-        .subtitle { font-size: 26px; color: #666; }
+        .subtitle { font-size: 26px; color: #000000; }
     </style>
     <div class="landing-container">
         <h1 class="title">🐾 Welcome to PetAdopt 🐾</h1>
