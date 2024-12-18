@@ -29,7 +29,7 @@ st.markdown("""
         /* Styling for Sidebar Radio Buttons */
         [data-testid="stSidebar"] .stRadio label {
             font-size: 12px; /* Make radio button text bigger */
-            padding: 10px 20px; /* Add padding for spacing */
+            padding: 15px 20px; /* Add padding for spacing */
             border-radius: 10px; /* Rounded edges for buttons */
             background-color: #000000; /* Darker background for buttons */
             color: #FFFFFF; /* White text color */
